@@ -1,8 +1,21 @@
 import Header from "./Header";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { validateForm } from "../utils/validate";
+
 
 const Login = () => {
   const [isSignInPage, setIsSignInPage] = useState(true);
+
+  const [error, setError] = useState(null);
+
+  const email = useRef(null);
+  const password = useRef(null);
+
+  const handleFormSubmitButton = () => {
+    const message = validateForm(email.current.value, password.current.value);
+    setError(message);
+
+  }
 
   const handleSignUp = () => {
     setIsSignInPage(!isSignInPage);
@@ -21,7 +34,7 @@ const Login = () => {
 
       {/* Form Container */}
       <div className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/3 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white p-6 sm:p-10 rounded-lg shadow-lg">
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <label className="text-2xl sm:text-3xl font-bold block mb-6">
             {isSignInPage ? "Sign In" : "Sign Up"}
           </label>
@@ -35,20 +48,25 @@ const Login = () => {
           )}
 
           <input
+          ref={email}
             type="text"
-            placeholder="Email or Mobile number"
+            placeholder="Email Address"
             className="border w-full rounded-sm p-3 my-4 block bg-[#3534345d]"
           />
 
           <input
+          ref={password}
             type="password"
             placeholder="Password"
             className="border w-full rounded-sm p-3 bg-[#3534345d]"
           />
 
+          <p className="text-red-600 font-bold mt-3">{error}</p>
+
           <button
             type="submit"
             className="w-full p-3 bg-[#c90d0dde] mt-4 rounded-sm font-semibold cursor-pointer"
+            onClick = {handleFormSubmitButton}
           >
             {isSignInPage ? "Sign In" : "Sign Up"}
           </button>
