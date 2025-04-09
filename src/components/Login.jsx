@@ -1,7 +1,8 @@
 import Header from "./Header";
 import { useState, useRef } from "react";
 import { validateForm } from "../utils/validate";
-
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignInPage, setIsSignInPage] = useState(true);
@@ -15,7 +16,37 @@ const Login = () => {
     const message = validateForm(email.current.value, password.current.value);
     setError(message);
 
-  }
+    if (message) return;
+
+    if (!isSignInPage) {
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorCode + "-" + errorMessage);
+          // ..
+        });
+    } else {
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorCode + "-" + errorMessage);
+        });
+    }
+  };
 
   const handleSignUp = () => {
     setIsSignInPage(!isSignInPage);
@@ -25,14 +56,12 @@ const Login = () => {
     <div className="relative h-screen w-screen">
       <Header />
 
-      {/* Background Image */}
       <img
         className="h-full w-full object-cover"
         src="https://assets.nflxext.com/ffe/siteui/vlv3/98df3030-1c2b-4bd1-a2f5-13c611857edb/web/IN-en-20250331-TRIFECTA-perspective_247b6f06-c36d-4dff-a8eb-4013325c3f8e_large.jpg"
         alt="background"
       />
 
-      {/* Form Container */}
       <div className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/3 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white p-6 sm:p-10 rounded-lg shadow-lg">
         <form onSubmit={(e) => e.preventDefault()}>
           <label className="text-2xl sm:text-3xl font-bold block mb-6">
@@ -48,14 +77,14 @@ const Login = () => {
           )}
 
           <input
-          ref={email}
+            ref={email}
             type="text"
             placeholder="Email Address"
             className="border w-full rounded-sm p-3 my-4 block bg-[#3534345d]"
           />
 
           <input
-          ref={password}
+            ref={password}
             type="password"
             placeholder="Password"
             className="border w-full rounded-sm p-3 bg-[#3534345d]"
@@ -64,9 +93,8 @@ const Login = () => {
           <p className="text-red-600 font-bold mt-3">{error}</p>
 
           <button
-            type="submit"
+            onClick={handleFormSubmitButton}
             className="w-full p-3 bg-[#c90d0dde] mt-4 rounded-sm font-semibold cursor-pointer"
-            onClick = {handleFormSubmitButton}
           >
             {isSignInPage ? "Sign In" : "Sign Up"}
           </button>
