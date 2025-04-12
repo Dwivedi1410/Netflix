@@ -1,17 +1,21 @@
 import Header from "./Header";
 import { useState, useRef } from "react";
 import { validateForm } from "../utils/validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-
+import { LOGIN_PAGE_BACKGROUND_IMAGE } from "../utils/constants";
 
 const Login = () => {
   const [isSignInPage, setIsSignInPage] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const email = useRef(null);
@@ -32,15 +36,15 @@ const Login = () => {
           //here i am updating the user profile with the entered values.
           updateProfile(user, {
             displayName: name.current.value,
-          }).then(() => {
-
-            //performing dispatch action here => when user is varifies this will update the profile of the user.
-            const {uid, email, displayName} = auth.currentUser;
-            dispatch(addUser({uid: uid, email: email, displayName: displayName}));
-            navigate("/browse")
-          }).catch((error) => {
-            setError(error.message);
-          });
+          })
+            .then(() => {
+              //performing dispatch action here => when user is varifies this will update the profile of the user.
+              const { uid, email, displayName } = auth.currentUser;
+              dispatch(addUser({ uid: uid, email: email, displayName: displayName }));
+            })
+            .catch((error) => {
+              setError(error.message);
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -51,7 +55,6 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
           const user = userCredential.user;
-          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -71,7 +74,7 @@ const Login = () => {
 
       <img
         className="h-full w-full object-cover"
-        src="https://assets.nflxext.com/ffe/siteui/vlv3/98df3030-1c2b-4bd1-a2f5-13c611857edb/web/IN-en-20250331-TRIFECTA-perspective_247b6f06-c36d-4dff-a8eb-4013325c3f8e_large.jpg"
+        src= { LOGIN_PAGE_BACKGROUND_IMAGE }
         alt="background"
       />
 
@@ -83,7 +86,7 @@ const Login = () => {
 
           {!isSignInPage && (
             <input
-            ref={name}
+              ref={name}
               type="text"
               placeholder="Enter Full Name"
               className="border w-full rounded-sm p-3 block mt-6 bg-[#3534345d]"
