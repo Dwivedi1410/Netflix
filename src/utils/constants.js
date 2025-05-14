@@ -11,3 +11,6 @@ export const OPTIONS = {
       Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlMTkxZGNkOWViZGRhZTY4MmQxYjVkMzVmM2RjMDk2ZiIsIm5iZiI6MTc0NDQ2MzE3Mi44MzcsInN1YiI6IjY3ZmE2NTQ0N2I0M2JkY2UyMGFlYzk1ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vUiKDGH65F7wZ3tZnujTmlazB4m-vFouxdv0V2CmSec'
     }
   };
+
+
+export const GEMINI_API = import.meta.env.VITE_GEMINI_API;

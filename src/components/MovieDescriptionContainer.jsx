@@ -1,31 +1,25 @@
-import { useSelector } from "react-redux";
-import useNowPlayingMoviesData from "../hooks/useNowPlayingMoviesData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
+const MovieDescriptionContainer = ({firstMovieDetails}) => {
 
-const MovieDescriptionContainer = () => {
-    useNowPlayingMoviesData();
-
-    const movieData = useSelector((store) => store.movie.nowPlayingMovies);
+  const { original_title, overview } = firstMovieDetails || {};
   
-    if (!movieData ||  !movieData.length) return null;
-    
-    const firstMovie = movieData[0];
-    const { original_title, overview } = firstMovie || {};
-    
-    console.log(original_title);
-    console.log(overview)
-    
-
-    return(
-        <div className="absolute mt-60 pl-8">
-            <h1 className="text-4xl font-bold">{original_title}</h1>
-            <p className="w-4/12 mt-4">{overview}</p>
-            <div className="mt-4">
-                <button className="bg-amber-400 p-2 text-lg rounded-lg w-[100px]">Play</button>
-                <button className="bg-amber-400 p-2 text-lg rounded-lg w-[100px] ml-3">Info</button>
-            </div>
-        </div>
-    )
-}
+  return (
+    <div className="w-screen aspect-video absolute pt-60 pl-8 text-white bg-gradient-to-r from-black">
+      <h1 className="text-4xl font-bold">{original_title}</h1>
+      <p className="w-4/12 mt-4">{overview}</p>
+      <div className="mt-4">
+        <button className="bg-amber-400 p-2 text-lg rounded-lg w-[100px]">
+          <FontAwesomeIcon icon={faPlay} /> Play
+        </button>
+        <button className="bg-amber-400 p-2 text-lg rounded-lg w-[100px] ml-3">
+          <FontAwesomeIcon icon={faCircleInfo} /> Info
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default MovieDescriptionContainer;
